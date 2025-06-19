@@ -24,7 +24,7 @@ jobs:
         run: rm -rf node_modules
 
       - name: Install dependencies
-        run: npm clean-install
+        run: npm install --no-fund --ignore-scripts
 
       - name: Run unit tests
         run: npm run test -- --watch=false --browsers=ChromeHeadless
