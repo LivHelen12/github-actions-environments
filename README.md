@@ -1,6 +1,6 @@
 # Choose the language
-- [English](angular-environments-and-github-actions)
-- [Português](angular-environments-e-github-actions)
+- [English](#angular-environments-and-github-actions)
+- [Português](#angular-environments-e-github-actions)
 
 # Angular Environments And Github Actions 
 
