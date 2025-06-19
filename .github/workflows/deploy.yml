@@ -1,0 +1,42 @@
+name: Test Build and Deploy Angular App (Different environments)
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Debug current ref
+        run: echo "Current git ref: ${{ github.ref }}"
+
+      - name: Build for development
+        if: github.ref == 'refs/heads/develop'
+        run: npm run build -- --configuration=development
+
+      - name: Build for staging
+        if: github.ref == 'refs/heads/staging'
+        run: npm run build -- --configuration=staging
+
+      - name: Build for production
+        if: github.ref == 'refs/heads/main'
+        run: npm run build -- --configuration=production
