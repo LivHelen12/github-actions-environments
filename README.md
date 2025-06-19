@@ -1,59 +1,81 @@
-# EnvironmentsConfig
+# Choose the language
+- [English](angular-environments-and-github-actions)
+- [Português](angular-environments-e-github-actions)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+# Angular Environments And Github Actions 
 
-## Development server
+Using github actions to set the environment automatically in angular projects.
 
-To start a local development server, run:
+## Stack utilizada
 
-```bash
-ng serve
+**Front-end:** Angular
+
+**CI/CD:** Github Actions
+
+## Problem to solve
+
+In this context, consider angular projects that have multiple environments, e.g. development, staging and production.
+
+Without automation, you have to remember to manually change the environments file indicating whether the environment is production or not. We also need to remember to change the URL manually.
+
+This is a problem because it's very easy to forget to change or to mistakenly change some information.
+
+## Repository Structure
+
+Consider that we have 3 environments: development (develop branch), staging (staging branch) and production (main branch). For each environment, the URL changes, where each one deploys and the configurations.
+
+The structure can be different, for example, you can use release tags instead of or your own branch names, but the process is similar.
+
+## Solution used
+
+The solution used in this case was, when running the CI/CD in the branches configured and defined in the workflow file, run in the build step the change to the environment URL. So, the steps are:
+
+- Set up the basic structure of the github actions workflow, defining my branches, steps and actions.
+
+- Define the different environments needed in the project developed with angular.
+
+```
+  - environments
+        - environment.production.ts
+        - environment.staging.ts
+        - environment.ts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+- Add specific build scripts for each environment in package-json.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```json
+  "scripts": {
+    "build:dev": "ng build --configuration=development",
+    "build:staging": "ng build --configuration=staging",
+    "build:prod": "ng build --configuration=production",
+  }
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
+- Change angular.json to automatically replace the URL using fileReplacements.
+
+```json
+"staging": {
+    "fileReplacements": [
+        {
+           "replace": "src/environments/environment.ts",
+           "with": "src/environments/environment.staging.ts"
+        }
+    ]
+}
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
+```json
+"production": {
+    "fileReplacements": [
+        {
+            "replace": "src/environments/environment.ts",
+            "with": "src/environments/environment.production.ts"
+        }
+    ],
+}
 ```
+-------
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
