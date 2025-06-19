@@ -28,12 +28,12 @@ jobs:
 
       - name: Build for development
         if: github.ref == 'refs/heads/develop'
-        run: npm run build -- --configuration=development
+        run: npm run build:dev
 
       - name: Build for staging
         if: github.ref == 'refs/heads/staging'
-        run: npm run build -- --configuration=staging
+        run: npm run build:staging
 
       - name: Build for production
         if: github.ref == 'refs/heads/main'
-        run: npm run build -- --configuration=production
+        run: npm run build:prod
